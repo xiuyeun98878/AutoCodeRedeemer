@@ -1,0 +1,228 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "CodesUI"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Size = UDim2.new(0,760,0,430)
+main.Position = UDim2.new(.5,-380,.5,-215)
+main.BackgroundColor3 = Color3.fromRGB(34,31,27)
+main.BorderSizePixel = 0
+main.Parent = gui
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(0,0,0)
+stroke.Thickness = 3
+stroke.Parent = main
+
+local top = Instance.new("Frame")
+top.Size = UDim2.new(1,0,0,82)
+top.BackgroundColor3 = Color3.fromRGB(103,118,132)
+top.BorderSizePixel = 0
+top.Parent = main
+
+local title = Instance.new("TextLabel")
+title.BackgroundTransparency = 1
+title.Position = UDim2.new(0,20,0,0)
+title.Size = UDim2.new(0,350,1,0)
+title.Text = "Codes"
+title.Font = Enum.Font.FredokaOne
+title.TextScaled = true
+title.TextColor3 = Color3.new(1,1,1)
+title.Parent = top
+
+local ts = Instance.new("UIStroke")
+ts.Color = Color3.new(0,0,0)
+ts.Thickness = 4
+ts.Parent = title
+
+local close = Instance.new("TextButton")
+close.Size = UDim2.new(0,70,0,70)
+close.Position = UDim2.new(1,-82,0,6)
+close.BackgroundColor3 = Color3.fromRGB(170,42,42)
+close.Text = "X"
+close.Font = Enum.Font.FredokaOne
+close.TextScaled = true
+close.TextColor3 = Color3.new(1,1,1)
+close.Parent = top
+
+local cs = Instance.new("UIStroke")
+cs.Color = Color3.new(0,0,0)
+cs.Thickness = 3
+cs.Parent = close
+
+close.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+local text = Instance.new("TextLabel")
+text.BackgroundTransparency = 1
+text.Position = UDim2.new(0,40,0,105)
+text.Size = UDim2.new(1,-80,0,120)
+text.RichText = true
+text.TextWrapped = true
+text.Font = Enum.Font.FredokaOne
+text.TextScaled = true
+text.TextColor3 = Color3.new(1,1,1)
+text.Text =
+'Redeem any <font color="#20d620">DLC codes</font>, or\ncodes from <font color="#ffc91d">Sammy</font> here'
+text.Parent = main
+
+local txtStroke = Instance.new("UIStroke")
+txtStroke.Color = Color3.new(0,0,0)
+txtStroke.Thickness = 4
+txtStroke.Parent = text
+
+local box = Instance.new("TextBox")
+box.Size = UDim2.new(0,650,0,78)
+box.Position = UDim2.new(.5,-325,0,225)
+box.BackgroundColor3 = Color3.fromRGB(167,167,167)
+box.Text = ""
+box.PlaceholderText = "Redeeming..."
+box.PlaceholderColor3 = Color3.new(1,1,1)
+box.Font = Enum.Font.FredokaOne
+box.TextScaled = true
+box.TextColor3 = Color3.new(1,1,1)
+box.ClearTextOnFocus = false
+box.Parent = main
+
+local bs = Instance.new("UIStroke")
+bs.Color = Color3.new(0,0,0)
+bs.Thickness = 3
+bs.Parent = box
+
+local submit = Instance.new("TextButton")
+submit.Size = UDim2.new(0,420,0,90)
+submit.Position = UDim2.new(.5,-210,0,335)
+submit.BackgroundColor3 = Color3.fromRGB(80,164,78)
+submit.Text = "Submit"
+submit.Font = Enum.Font.FredokaOne
+submit.TextScaled = true
+submit.TextColor3 = Color3.new(1,1,1)
+submit.Parent = main
+
+local ss = Instance.new("UIStroke")
+ss.Color = Color3.new(0,0,0)
+ss.Thickness = 3
+ss.Parent = submit
+
+-- Rounded corners
+
+for _,obj in ipairs({main,top,close,box,submit}) do
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0,6)
+	c.Parent = obj
+end
+
+top:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(0,4)
+box:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(0,4)
+submit:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(0,4)
+
+-- UIScale
+
+local scale = Instance.new("UIScale")
+scale.Scale = 1
+scale.Parent = main
+
+local cam = workspace.CurrentCamera
+
+local function resize()
+	local v = cam.ViewportSize
+
+	if v.X < 900 then
+		scale.Scale = .8
+	elseif v.X < 1200 then
+		scale.Scale = .95
+	else
+		scale.Scale = 1
+	end
+end
+
+resize()
+cam:GetPropertyChangedSignal("ViewportSize"):Connect(resize)
+
+-- Button animation
+
+local TweenService = game:GetService("TweenService")
+
+local function hover(button)
+
+	local original = button.BackgroundColor3
+
+	button.MouseEnter:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(.12),
+			{
+				BackgroundColor3 = original:Lerp(Color3.new(1,1,1),.08)
+			}
+		):Play()
+
+	end)
+
+	button.MouseLeave:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(.12),
+			{
+				BackgroundColor3 = original
+			}
+		):Play()
+
+	end)
+
+end
+
+hover(submit)
+hover(close)
+
+-- Text outline for textbox
+
+local tbStroke = Instance.new("UIStroke")
+tbStroke.Color = Color3.new(0,0,0)
+tbStroke.Thickness = 2
+tbStroke.Parent = box
+
+-- Fake shadow
+
+local shadow = Instance.new("Frame")
+shadow.Size = main.Size
+shadow.Position = main.Position + UDim2.new(0,8,0,8)
+shadow.BackgroundColor3 = Color3.new(0,0,0)
+shadow.BackgroundTransparency = .55
+shadow.ZIndex = 0
+shadow.Parent = gui
+
+local sc = Instance.new("UICorner")
+sc.CornerRadius = UDim.new(0,6)
+sc.Parent = shadow
+
+main.ZIndex = 2
+top.ZIndex = 3
+title.ZIndex = 4
+close.ZIndex = 4
+text.ZIndex = 4
+box.ZIndex = 4
+submit.ZIndex = 4
+
+submit.MouseButton1Click:Connect(function()
+
+	if box.Text == "" then
+		box.PlaceholderText = "Redeeming..."
+		return
+	end
+
+	submit.Text = "Redeeming..."
+
+	task.wait(1)
+
+	submit.Text = "Submit"
+
+end)
